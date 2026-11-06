@@ -67,7 +67,10 @@ list(
 
 ```{r}
 
-vsgraph <-  ggplot(candy, )
+vsgraph <-  ggplot(candy,aes(, winpercent)) +
+  geom_violin()
+
+ggplotly(vsgraph)
   
     
 ```
