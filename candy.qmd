@@ -1,6 +1,6 @@
 ---
-title: "Candy"
-author: "Caide Filipo"
+title: "Candy Dashboard"
+author: " - Caide Filipo"
 date: "11/2/26"
 format: 
   dashboard:
@@ -13,6 +13,7 @@ library(tidyverse)
 library(plotly)
 library(fivethirtyeight)
 library(dplyr)
+library(scales)
 
 candy <- fivethirtyeight::candy_rankings
 
@@ -24,13 +25,33 @@ candy <- candy |>
     .default = 'other'
   ))
 
+#Table
+top5_chocolate <- candy %>%
+  filter(type == "chocolate") %>%
+  slice_max(order_by = winpercent, n = 5) %>%
+  arrange(desc(winpercent)) %>%
+  mutate(Chocolate_Win_Percent = paste0(round(winpercent), "%")) %>%
+  select(Chocolate_Candy = competitorname, Chocolate_Win_Percent)
+
+top5_fruity <- candy %>%
+  filter(type == "fruity") %>%
+  slice_max(order_by = winpercent, n = 5) %>%
+  arrange(desc(winpercent)) %>%
+  mutate(Fruity_Win_Percent = paste0(round(winpercent), "%")) %>%
+  select(Fruity_Candy = competitorname, Fruity_Win_Percent)
+
+top5_side_by_side <- bind_cols(top5_chocolate, top5_fruity)
 #count(candy, type)
+
 
 ```
 
+
+# Data Plots
+
 ## Row 1
 
-```{r}
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
 #| content: valuebox
 #| title: 'Total Candies'
 
@@ -41,40 +62,60 @@ list(
 
 ```
 
-```{r}
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
 #| content: valuebox
-#| title: 'Fruity Candies Win %'
+#| title: "Fruity Candies Win %"
+#| icon: hypnotize
+#| color: danger
 
-list(
-  icon = 'hypnotize',
-  color = 'red',
-  #value = (candy$type == 'fruity'))
-  value = paste0(round(mean(subset(candy, type == "fruity") $winpercent, na.rm=TRUE)), '%'))
-
+fruity_win <- mean(subset(candy, type == "fruity")$winpercent, na.rm = TRUE)
+paste0(round(fruity_win, 1), "%")
 ```
 
-```{r}
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
 #| content: valuebox
-#| title: 'Chocolate Candies Win %'
+#| title: "Chocolate Candies Win %"
+#| icon: heart-fill
+#| color: blue
 
-list(
-  icon = 'heart-fill',
-  color = 'blue',
-  value = paste0(round(mean(subset(candy, type == "chocolate")$winpercent, na.rm=TRUE)), '%'))
+chocolate_win <- mean(subset(candy, type == "chocolate")$winpercent, na.rm = TRUE)
+paste0(round(chocolate_win, 1), "%")
 ```
 
 ## Row 2
 
-```{r}
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
 
-vsgraph <-  ggplot(candy,aes(, winpercent)) +
-  geom_violin()
+candy_summary <- candy %>%
+  filter(type %in% c("chocolate", "fruity")) %>%
+  group_by(type) %>%
+  summarise(avg_winpercent = mean(winpercent, na.rm = TRUE))
 
-ggplotly(vsgraph)
+ggplot(candy_summary, aes(x = type, y = avg_winpercent / 100, fill = type)) +
+  geom_col(width = 0.5, show.legend = FALSE) +
+  geom_text(
+    aes(label = percent(avg_winpercent / 100, accuracy = 0.1)),
+    vjust = -0.5, 
+    fontface = "bold") +
   
+  scale_y_continuous(labels = percent_format(), limits = c(0, 1)) +
+  scale_fill_manual(values = c("chocolate" = "#5C3A21", "fruity" = "#FF4081")) +
+  labs(
+    title = "Average Win Rate: Chocolate vs. Fruity Candy",
+    x = "Candy Type",
+    y = "Average Win Percent") +
+  theme_linedraw()
+
     
 ```
 
-```{r}
+# Data Table
+
+This dataset describes individual candies and comes from the 'candy' package. This table showcases the top 5 fruity and chocolate candies that were ranked the "best".
+
+## Row 1
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+
+knitr::kable(top5_side_by_side)
 
 ```

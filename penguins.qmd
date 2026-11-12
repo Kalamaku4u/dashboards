@@ -1,6 +1,6 @@
 ---
 title: "Palmer Penguins Dashboard"
-author: "Caide Filipo"
+author: " - Caide Filipo"
 format: dashboard
 ---
 
@@ -52,8 +52,7 @@ ggplotly(bill_by_mass)
 
 # Data Table
 
-This dataset describes 344 individual penguins and comes from the 'palmerpenguins' package. These three species of penguins live on three 
-different islands in the Palmer Archipelago.
+This dataset describes 344 individual penguins and comes from the 'palmerpenguins' package. These three species of penguins live on three different islands in the Palmer Archipelago.
 
 ## Row 1
 
