@@ -14,7 +14,7 @@ library(plotly)
 library(fivethirtyeight)
 library(dplyr)
 library(scales)
-
+#wam
 candy <- fivethirtyeight::candy_rankings
 
 candy <- candy |>
