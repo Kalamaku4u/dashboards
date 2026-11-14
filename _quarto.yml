@@ -10,6 +10,8 @@ website:
         text: Home
       - href: candy.qmd
         text: Candy 
+      - href: penguins.qmd
+        text: Penguins
       - href: https://kalamaku4u.github.io/
         text: Return
       
