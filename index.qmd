@@ -1,7 +1,5 @@
 ---
 title: "Sample Dashboard Projects"
-toc: false
-about:
 ---
 
 # These are some of my most prized dashboards
